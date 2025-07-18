@@ -12,7 +12,7 @@ private.*
 ProserveHireAppCDK/
 coverage/
 test.*
-lib/
+# lib/
 package-lock.json
 .gitlab-ci.yml
 template.md

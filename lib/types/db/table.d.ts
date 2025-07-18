@@ -1,0 +1,35 @@
+import { Table } from 'aws-cdk-lib/aws-dynamodb';
+import { Construct } from 'constructs';
+import { DynamoTableProps, SchemaGlobal, SchemaLocal, SchemaTable, SchemaTableInstance } from '../types';
+import { SchemaPrimaryKey } from '../key/primary';
+import { SchemaLocalIndex } from '../key/local';
+import { SchemaGlobalIndex } from '../key/global';
+import { DbApi } from './db-api';
+import { GraphqlApi } from 'aws-cdk-lib/aws-appsync';
+import { AppSyncSchema } from '../api/schema';
+export declare class DbTable implements SchemaTableInstance {
+    scope: Construct;
+    readonly schemaTable: SchemaTable;
+    readonly label?: string | undefined;
+    readonly baseName: string;
+    readonly tableName: string;
+    construct: Table;
+    api?: DbApi;
+    props: DynamoTableProps;
+    localSecondaryIndexes: SchemaLocalIndex[];
+    globalSecondaryIndexes: SchemaGlobalIndex[];
+    primaryKey: SchemaPrimaryKey;
+    attributes: Record<string, string>;
+    readonly auto: boolean;
+    readonly scan: boolean;
+    readonly subscription: boolean;
+    readonly query: boolean;
+    readonly mutation: boolean;
+    constructor(scope: Construct, schemaTable: SchemaTable, label?: string | undefined);
+    get pName(): string;
+    get sName(): string | undefined;
+    addApi(api: GraphqlApi, schema: AppSyncSchema): DbApi;
+    protected setLocalKeys(keys?: (string | SchemaLocal | SchemaLocalIndex)[]): SchemaLocalIndex[];
+    protected setGlobalKeys(keys?: (string | SchemaGlobal | SchemaGlobalIndex)[]): SchemaGlobalIndex[];
+    protected setGraphAttributes(attrs?: string | string[] | Record<string, string>): Record<string, string>;
+}
