@@ -83,6 +83,13 @@ export class DbApi {
                     const getIndexName = `${prefix}${table.baseName}By${capitalize(index.pName)}`
         
                     if (!usedOperations.includes(getIndexName)) {
+                        let index_name: string = '';
+                        if (index.indexName) {
+                            index_name = index.indexName;
+                        } else {
+                                index_name = `global${table.baseName}${capitalize(index.pName)}${capitalize(index.sName || '')}`
+                        }
+
                         this.api.createResolver(getIndexName, {
                             fieldName: getIndexName,
                             typeName: 'Query',
@@ -92,7 +99,7 @@ export class DbApi {
                                 MappingTemplate.dynamoDbResultItem(),
                             requestMappingTemplate: MappingTemplate.dynamoDbQuery(
                                 KeyCondition.eq(index.pName, index.pName),
-                                `global${table.baseName}${capitalize(index.pName)}${capitalize(index.sName || '')}`
+                                index_name
                             )
                         })
                         usedOperations.push(getIndexName);
