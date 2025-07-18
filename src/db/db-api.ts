@@ -92,7 +92,7 @@ export class DbApi {
                                 MappingTemplate.dynamoDbResultItem(),
                             requestMappingTemplate: MappingTemplate.dynamoDbQuery(
                                 KeyCondition.eq(index.pName, index.pName),
-                                `global${table.baseName}${index.pName}${index.sName || ''}`
+                                `global${table.baseName}${capitalize(index.pName)}${capitalize(index.sName || '')}`
                             )
                         })
                         usedOperations.push(getIndexName);

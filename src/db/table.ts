@@ -96,10 +96,24 @@ export class DbTable implements SchemaTableInstance {
             const key = typeof $key === 'string' ? {
                 partitionKey: new KeyInstance($key, undefined, 'partition')
             } : $key;
-            let name = key.indexName || `global${capitalize(this.tableName) + capitalize(
-                typeof key.partitionKey === 'string' ? key.partitionKey : key.partitionKey.name
-            )}`;
-            if (key.sortKey) name += capitalize(typeof key.sortKey === 'string' ? key.sortKey : key.sortKey.name);
+            
+            let name: string = '';
+            if (key.indexName) {
+                name = key.indexName;
+            } else {
+                const partitionKeyName = typeof key.partitionKey === 'string' 
+                        ? key.partitionKey 
+                        : key.partitionKey.name;
+
+                    const sortKeyName = key.sortKey
+                        ? typeof key.sortKey === 'string'
+                            ? key.sortKey
+                            : key.sortKey.name
+                        : '';
+
+                    name = `global${capitalize(this.tableName)}${capitalize(partitionKeyName)}${capitalize(sortKeyName)}`;
+            }
+
             return new SchemaGlobalIndex(
                     name,
                     key.partitionKey,
